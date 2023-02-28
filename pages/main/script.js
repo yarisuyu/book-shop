@@ -63,13 +63,18 @@ const renderHeader = function () {
     let bagIco = document.createElement('img');
     bagIco.className = 'header__bag-ico';
     bagIco.setAttribute('src', '../../assets/icons/bag-ico.png');
+    bagIco.setAttribute('ondrop', 'drop(event)');
+    bagIco.setAttribute('ondragover', 'allowDrop(event)');
     bag.append(bagIco);
 
     wrapper.append(bag);
 }
 
-const renderBook = function(container, item) {
+const renderBook = function(container, id, item) {
     let book = document.createElement('div');
+    book.setAttribute('draggable', true);
+    book.setAttribute('ondragstart', 'drag(event)');
+    book.id = id;
 
     let figure = document.createElement('figure');
     let img = document.createElement('img');
@@ -84,7 +89,7 @@ const renderBook = function(container, item) {
 
     let bookName = document.createElement('p');
     bookName.innerText = item.title;
-    bookName.className = 'books__book-name';
+    bookName.className = 'books__book-title';
     figcaption.append(bookName);
 
     let bookAuthor = document.createElement('p');
@@ -118,6 +123,12 @@ const renderBook = function(container, item) {
 
     let addBtn = document.createElement('button');
     addBtn.innerText = 'Add to bag';
+
+    addBtn.addEventListener('click', (event) => {
+        console.log(event);
+        console.log(item);
+        addToCart(item);
+    });
     buttons.append(addBtn);
 
     figcaption.append(buttons);
@@ -131,6 +142,7 @@ const renderMain = function () {
     heading.innerText = 'Book Catalog';
     heading.className = 'books__heading';
     main.append(heading);
+    let i = 0;
 
     fetch('http://127.0.0.1:5500/assets/data/books.json')
         .then(response => {
@@ -143,7 +155,7 @@ const renderMain = function () {
             bookContainer.className = 'books';
             main.append(bookContainer);
 
-            data.forEach(book => renderBook(bookContainer, book));
+            data.forEach(book => renderBook(bookContainer, i++, book));
         });
 }
 
@@ -154,3 +166,56 @@ const renderFooter = function () {
 renderHeader();
 renderMain();
 renderFooter();
+
+
+function drag(ev) {
+    console.log('Drag: ');
+    console.log(ev);
+
+    let element = ev.target;
+
+    console.log(element.parentElement.parentElement.id);
+    let sibling = element.nextSibling;
+    let author = sibling.querySelector('.books__book-author').innerText;
+    let title = sibling.querySelector('.books__book-title').innerText;
+    let price = sibling.querySelector('.books__book-price').innerText;
+
+    const data = { title, author, price }
+    console.log(data);
+
+    ev.dataTransfer.setData('text', JSON.stringify(data));
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData('text');
+    console.log('Dropped: ');
+    var parsedData = JSON.parse(data);
+    console.log(parsedData);
+    let cart = localStorage.getItem('shoppingCart');
+    console.log(cart);
+    let shoppingCart = new Set(JSON.parse(cart) ?? []);
+    console.log(shoppingCart);
+    shoppingCart.add(JSON.stringify(parsedData));
+    localStorage.setItem('shoppingCart', JSON.stringify(Array.from(shoppingCart)));
+}
+
+function addToCart(book) {
+    console.log(book);
+    let cart = localStorage.getItem('shoppingCart');
+    console.log(cart);
+    let shoppingCart = new Set(JSON.parse(cart) ?? []);
+    console.log(shoppingCart);
+    let data = {
+        title: book.title,
+        author: book.author,
+        price: book.price
+    };
+    console.log(data);
+    shoppingCart.add(JSON.stringify(data));
+    localStorage.setItem('shoppingCart', JSON.stringify(Array.from(shoppingCart)));
+}
