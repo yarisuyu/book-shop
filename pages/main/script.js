@@ -74,7 +74,6 @@ const renderBook = function(container, id, item) {
     let book = document.createElement('div');
     book.setAttribute('draggable', true);
     book.setAttribute('ondragstart', 'drag(event)');
-    book.id = id;
 
     let figure = document.createElement('figure');
     let img = document.createElement('img');
@@ -82,6 +81,7 @@ const renderBook = function(container, id, item) {
     img.className = 'books__book-img';
     img.setAttribute('width', '150');
     img.setAttribute('height', '220');
+    img.id = id;
 
     figure.append(img);
     let figcaption = document.createElement('figcaption');
@@ -118,7 +118,6 @@ const renderBook = function(container, id, item) {
         let popupContainer = document.querySelector('.popup');
 
         renderDescPopup(popupContainer, item.title, item.author, item.description);
-
     })
 
     let addBtn = document.createElement('button');
@@ -127,7 +126,7 @@ const renderBook = function(container, id, item) {
     addBtn.addEventListener('click', (event) => {
         console.log(event);
         console.log(item);
-        addToCart(item);
+        addToCart({ ...item, id });
     });
     buttons.append(addBtn);
 
@@ -180,7 +179,7 @@ function drag(ev) {
     let title = sibling.querySelector('.books__book-title').innerText;
     let price = sibling.querySelector('.books__book-price').innerText;
 
-    const data = { title, author, price }
+    const data = { id, title, author, price }
     console.log(data);
 
     ev.dataTransfer.setData('text', JSON.stringify(data));
@@ -194,28 +193,63 @@ function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData('text');
     console.log('Dropped: ');
+
     var parsedData = JSON.parse(data);
     console.log(parsedData);
+
     let cart = localStorage.getItem('shoppingCart');
     console.log(cart);
-    let shoppingCart = new Set(JSON.parse(cart) ?? []);
+    // cart is stored as a stringified Map of id : {...book, count}
+    let shoppingCart = new Map(Object.entries(JSON.parse(cart) ?? []));
     console.log(shoppingCart);
-    shoppingCart.add(JSON.stringify(parsedData));
-    localStorage.setItem('shoppingCart', JSON.stringify(Array.from(shoppingCart)));
+
+    // if cart contains this book, increment count
+    let id = parsedData.id;
+    let book = shoppingCart[id];
+    if (book) {
+        book.count++;
+    }
+    else {
+        book = {
+            title: parsedData.title,
+            author: parsedData.author,
+            price: parsedData.price,
+            count: 1
+        };
+    }
+
+    shoppingCart.set(id, book);
+    console.log(JSON.stringify(Object.fromEntries(shoppingCart)));
+    localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
 }
 
-function addToCart(book) {
-    console.log(book);
+function addToCart(data) {
+    console.log(data);
     let cart = localStorage.getItem('shoppingCart');
     console.log(cart);
-    let shoppingCart = new Set(JSON.parse(cart) ?? []);
+
+    let shoppingCart = new Map(Object.entries(JSON.parse(cart) ?? []));
     console.log(shoppingCart);
-    let data = {
-        title: book.title,
-        author: book.author,
-        price: book.price
-    };
-    console.log(data);
-    shoppingCart.add(JSON.stringify(data));
-    localStorage.setItem('shoppingCart', JSON.stringify(Array.from(shoppingCart)));
+
+    let id = `${data.id}`;
+    let book = shoppingCart.get(id);
+    if (book) {
+        book.count = book.count + 1;
+        console.log(book.count);
+    }
+    else {
+        book = {
+            title: data.title,
+            author: data.author,
+            price: data.price,
+            count: 1
+        };
+    }
+    console.log(book);
+    shoppingCart.set(id, book);
+    console.log(shoppingCart);
+    console.log(Object.fromEntries(shoppingCart));
+
+    console.log(JSON.stringify(Object.fromEntries(shoppingCart)));
+    localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
 }
