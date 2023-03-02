@@ -1,122 +1,101 @@
+function addElement(container, type, className, innerText, id, attributes) {
+    let element = document.createElement(type);
+    if (id != null && id !== '') {
+        element.id = id;
+    }
+
+    if (className != null && className !== '') {
+        element.className = className;
+    }
+
+    if (attributes != null) {
+        if (attributes instanceof Map) {
+            attributes.forEach((value, key) => {
+                element.setAttribute(key, value);
+            })
+        }
+    }
+
+    if (innerText != null) {
+        element.innerText = innerText;
+    }
+
+    container.append(element);
+    return element;
+}
+
+
 
 let body = document.querySelector("body");
+let popupContainer = addElement(body, 'div', 'popup', null, 'book-descr');
 
-let popupContainer = document.createElement('div');
-popupContainer.className = 'popup';
-popupContainer.id = 'book-descr';
-body.append(popupContainer);
-
-let header = document.createElement('header');
-header.className = "header";
-let main = document.createElement('main');
-let footer = document.createElement('footer');
-footer.className = "footer";
-
-body.append(header);
-body.append(main);
-body.append(footer);
+let header = addElement(body, 'header', 'header');
+let main = addElement(body, 'main', 'main');
+let footer = addElement(body, 'footer', 'footer');
 
 const renderDescPopup = function(container, header, author, description) {
-    let descContainer = document.createElement('div');
-    descContainer.className = 'popup__content';
-    container.append(descContainer);
+    let descContainer = addElement(container, 'div', 'popup__content');
+    let descHeader = addElement(descContainer, 'div', 'popup__header');
+    let descTitle = addElement(descHeader, 'h2', 'popup__title', header);
 
-    let descHeader = document.createElement('div');
-    descHeader.className = 'popup__header';
-    descContainer.append(descHeader);
-
-    let descTitle = document.createElement('h2');
-    descTitle.className = 'popup__title';
-    descTitle.innerText = header;
-    descHeader.append(descTitle);
-
-    let close = document.createElement('a');
-    close.href = '#';
-    close.className = 'close';
-    close.innerText = 'x';
-    descHeader.append(close);
-
-    let descAuthor = document.createElement('h3');
-    descAuthor.className = 'popup__author';
-    descAuthor.innerText = author;
-    descContainer.append(descAuthor);
-
-    let descText = document.createElement('p');
-    descText.className = 'popup__description';
-    descText.innerText = description;
-    descContainer.append(descText);
+    let close = addElement(descHeader, 'a', 'close', 'x', null, new Map(['href', '#']));
+    let descAuthor = addElement(descContainer, 'h3', 'popup__author', author);
+    let descText = addElement(descContainer, 'p', 'popup__description', description);
 }
 
 const renderHeader = function () {
-    let wrapper = document.createElement('div');
-    wrapper.className = 'wrapper';
-    header.append(wrapper);
-
-    let icon = document.createElement('div');
-    icon.className = 'header__ico';
-    icon.innerHTML = 'BookShop';
-    wrapper.append(icon);
+    let wrapper = addElement(header, 'div','wrapper');
+    let icon = addElement(wrapper, 'div', 'header__ico', 'BookShop');
 
     let bag = document.createElement('div');
     bag.className = 'header__bag';
 
-    let bagIco = document.createElement('img');
-    bagIco.className = 'header__bag-ico';
-    bagIco.setAttribute('src', '../../assets/icons/bag-ico.png');
-    bagIco.setAttribute('ondrop', 'drop(event)');
-    bagIco.setAttribute('ondragover', 'allowDrop(event)');
+    let bagIco = addElement(bag, 'img', 'header__bag-ico', null, null,
+        new Map([
+            ['src', '../../assets/icons/bag-ico.png'],
+            ['ondrop', 'drop(event)'],
+            ['ondragover', 'allowDrop(event)']
+        ]));
+
     bag.append(bagIco);
+
+    let bagSum = addElement(bag, 'div', 'cart__sum');
 
     wrapper.append(bag);
 }
 
-const renderBook = function(container, id, item) {
-    let book = document.createElement('div');
-    book.setAttribute('draggable', true);
-    book.setAttribute('ondragstart', 'drag(event)');
+const renderBook = function (container, id, item) {
+    let book = addElement(container, 'div', null, null,
+        new Map([
+            ['draggable', true],
+            ['ondragstart', 'drag(event)']
+        ]
+        ));
 
     let figure = document.createElement('figure');
-    let img = document.createElement('img');
-    img.setAttribute('src', item.imageLink);
-    img.className = 'books__book-img';
-    img.setAttribute('width', '150');
-    img.setAttribute('height', '220');
-    img.id = id;
+    book.append(figure);
 
-    figure.append(img);
+    let img = addElement(figure, 'img', 'books__book-img', null, id,
+        new Map([
+            ['src', item.imageLink],
+            ['width', '150'],
+            ['height', '220']
+        ]
+    ));
     let figcaption = document.createElement('figcaption');
     figcaption.className = 'books__book-caption';
+    figure.append(figcaption);
 
-    let bookName = document.createElement('p');
-    bookName.innerText = item.title;
-    bookName.className = 'books__book-title';
-    figcaption.append(bookName);
+    let bookName = addElement(figcaption, 'p', 'books__book-title', item.title);
+    let bookAuthor = addElement(figcaption, 'p', 'books__book-author', item.author);
+    let bookPrice = addElement(figcaption, 'p', 'books__book-price', item.price + "$");
+    let buttons = addElement(figcaption, 'div', 'books__book-buttons');
 
-    let bookAuthor = document.createElement('p');
-    bookAuthor.innerText = item.author;
-    bookAuthor.className = 'books__book-author';
-    figcaption.append(bookAuthor);
-
-    let bookPrice = document.createElement('p');
-    bookPrice.innerText = item.price + "$";
-    bookPrice.className = 'books__book-price';
-    figcaption.append(bookPrice);
-
-    let buttons = document.createElement('div');
-    buttons.className = 'books__book-buttons';
-
-    let showLink = document.createElement('a');
-    showLink.innerText = 'Show more';
-    showLink.href = '#book-descr';
-    showLink.className = 'books__book-info-link';
-    buttons.append(showLink);
+    let showLink = addElement(buttons, 'a', 'books__book-info-link', 'Show more', null,
+        new Map([['href', '#book-descr']]));
 
     showLink.addEventListener('click', (event) => {
-        console.log(event);
-        console.log(item.description);
-
         let popupContainer = document.querySelector('.popup');
-
         renderDescPopup(popupContainer, item.title, item.author, item.description);
     })
 
@@ -129,31 +108,18 @@ const renderBook = function(container, id, item) {
         addToCart({ ...item, id });
     });
     buttons.append(addBtn);
-
-    figcaption.append(buttons);
-    figure.append(figcaption);
-    book.append(figure);
-    container.append(book);
 }
 
 const renderMain = function () {
-    let heading = document.createElement('h1');
-    heading.innerText = 'Book Catalog';
-    heading.className = 'books__heading';
-    main.append(heading);
-    let i = 0;
+    let heading = addElement(main, 'h1', 'books__heading', 'Book Catalog');
 
+    let i = 0;
     fetch('http://127.0.0.1:5500/assets/data/books.json')
         .then(response => {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-
-            let bookContainer = document.createElement('div');
-            bookContainer.className = 'books';
-            main.append(bookContainer);
-
+            let bookContainer = addElement (main, 'div', 'books');
             data.forEach(book => renderBook(bookContainer, i++, book));
         });
 }
@@ -221,6 +187,10 @@ function drop(ev) {
     shoppingCart.set(id, book);
     console.log(JSON.stringify(Object.fromEntries(shoppingCart)));
     localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
+
+    let sum = +localStorage.getItem('shoppingCartSum');
+    sum += +book.price;
+    localStorage.setItem('shoppingCartSum', sum);
 }
 
 function addToCart(data) {
@@ -252,4 +222,45 @@ function addToCart(data) {
 
     console.log(JSON.stringify(Object.fromEntries(shoppingCart)));
     localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
+
+    let sum = +localStorage.getItem('shoppingCartSum');
+    sum += +book.price;
+    localStorage.setItem('shoppingCartSum', sum);
+
+    // add cart item count
+    let bag = document.querySelector('.header__bag');
+
+}
+
+function openCart() {
+    document.getElementById("cart-popup").style.display = "block";
+}
+
+function closeCart() {
+    document.getElementById("cart-popup").style.display = "none";
+}
+
+function renderCart(outerContainer) {
+    let container = addElement(outerContainer, 'div', 'cart', null, 'cart-popup');
+
+    let form = addElement(container, 'form', 'cart__form');
+    let header = addElement(form, 'h2', 'cart__header', 'Shopping cart');
+    let bookContainer = addElement(form, 'div', 'cart__books');
+
+    let booksEncrypted = localStorage.getItem('shoppingCart');
+    let books = new Map(Object.entries(JSON.parse(booksEncrypted) ?? []));
+
+    Object.values(books).forEach(value => {
+        addElement(bookContainer, 'div', 'cart__book-title', `${value.title}`);
+        addElement(bookContainer, 'div', 'cart__book-author',`${value.author}`);
+        addElement(bookContainer, 'div', 'cart__book-price', `${value.price}`);
+        addElement(bookContainer, 'a', 'cart__book-close','x', null, new Map(['onclick', 'onRemove(ev)']));
+    })
+
+    let totalSum = localStorage.getItem('shoppingCartSum');
+
+    addElement(form, 'div', 'cart__total-sum', totalSum + '$' );
+    addElement(form, 'button', 'cart__confirm-btn', 'Confirm order', null, new Map(['onclick', 'onCheckout()']))
+    addElement(form, 'button', 'cart__close-btn', 'Close', null, new Map(['onclick', 'closeCart()']))
+
 }
