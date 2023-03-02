@@ -24,14 +24,22 @@ function addElement(container, type, className, innerText, id, attributes) {
     return element;
 }
 
-
-
+var fragment = new DocumentFragment();
 let body = document.querySelector("body");
+body.id = 'app';
+
 let popupContainer = addElement(body, 'div', 'popup', null, 'book-descr');
 
 let header = addElement(body, 'header', 'header');
 let main = addElement(body, 'main', 'main');
 let footer = addElement(body, 'footer', 'footer');
+
+fragment.appendChild(popupContainer);
+fragment.appendChild(header);
+fragment.appendChild(main);
+fragment.appendChild(footer);
+
+document.getElementById("app").appendChild(fragment);
 
 const renderDescPopup = function(container, header, author, description) {
     let descContainer = addElement(container, 'div', 'popup__content');
