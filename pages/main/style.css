@@ -1,3 +1,9 @@
+.wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .popup {
     position: fixed;
     width: 100%;

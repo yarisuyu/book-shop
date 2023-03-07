@@ -122,7 +122,7 @@ const renderMain = function () {
     let heading = addElement(main, 'h1', 'books__heading', 'Book Catalog');
 
     let i = 0;
-    fetch('http://127.0.0.1:5500/assets/data/books.json')
+    fetch('/assets/data/books.json')
         .then(response => {
             return response.json();
         })

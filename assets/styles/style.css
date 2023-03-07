@@ -2,12 +2,80 @@
     --brand-violet: #cab3f5;
     --brand-darker-violet: #b490f6;
     --brand-dark-violet: #803ef9;
+
+    --brand-danger: #ff0076;
+    --brand-focus: #ff683b;
+    --brand-highlight: #ffa600;
 }
 
 body {
     max-width: 1280px;
     margin: 0 auto;
     color: #545454;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    position: relative;
+    width: 1em;
+    height: 1em;
+    border: 1px solid gray;
+    vertical-align: text-top;
+    color: var(--brand-dark-violet);
+}
+
+input[type='checkbox']::before {
+    content: "✔";
+    position: absolute;
+    right: -1px;
+    top: -0.3em;
+    font-size: 1.2em;
+    visibility: hidden;
+}
+
+input[type='checkbox']:checked::before {
+    visibility: visible;
+}
+
+input[type="checkbox"]:disabled {
+  border-color: black;
+  background: #ddd;
+  color: gray;
+}
+
+input[type='radio'] {
+    appearance: none;
+    position: relative;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border: 1px solid gray;
+    vertical-align: text-top;
+    color: var(--brand-dark-violet);
+}
+
+input[type='radio']::before {
+    content: "●";
+    position: absolute;
+    right: 2px;
+    top: -0.24em;
+    font-size: 1.2em;
+}
+
+input:invalid {
+    border: 1px solid var(--brand-danger);
+}
+
+input:active {
+    border: 1px solid var(--brand-highlight);
 }
 
 .header {
@@ -37,10 +105,7 @@ div, h1, h2, h3, h4, p {
 .wrapper {
     max-width: 1200px;
     margin: 0 auto;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    /* max-height: 100%; */
 }
 
 button, .button {

@@ -1,0 +1,47 @@
+.header .wrapper{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-around;
+}
+
+legend {
+    font-weight: bold;
+    background-color: #fff;
+    margin-bottom: 10px;
+}
+
+fieldset {
+    padding: 30px;
+    margin-bottom: 20px;
+    border: 0;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-gap: 10px;
+    width: 600px;
+    max-width: 500px;
+
+    -webkit-box-shadow: 3px 2px 9px 0px rgba(173,102,173,0.45);
+    -moz-box-shadow: 3px 2px 9px 0px rgba(173,102,173,0.45);
+    box-shadow: 3px 2px 9px 0px rgba(173,102,173,0.45);
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+.group-label {
+    margin-bottom: 10px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
