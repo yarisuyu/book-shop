@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- The order form contains fields with own validation rules and Complete button +20-->
     <header class="header">
         <div class="wrapper">
             <div class="header__ico">BookShop</div>
@@ -16,47 +15,54 @@
     <main>
         <div class="wrapper">
             <h2>Order form</h2>
-            <form action="" method="post">
+            <form action="" method="post" novalidate>
                 <fieldset>
                     <legend>Delivery address:</legend>
                     <!--Name (mandatory, the length not less than 4 symbols, strings only, without spaces)-->
                     <label for="name">Name:</label>
                     <input type="text" name="name" id="name" required autofocus minlength="4" pattern="[a-zA-Z]*"
                         title="Enter a string without spaces. Minimum 4 symbols">
+                    <span class="error" aria-live="polite"></span>
 
                     <!--Surname (mandatory, the length not less than 5 symbols, strings only, without spaces)-->
                     <label for="surname">Surname:</label>
                     <input type="text" name="surname" id="surname" required minlength="5" pattern="[a-zA-Z]*"
                         title="Enter a string without spaces. Minimum 5 symbols">
+                    <span class="error" aria-live="polite"></span>
 
                     <!--Delivery date(mandatory, not earlier than next day)-->
                     <label for="delivery-date">Delivery date:</label>
                     <input type="date" name="delivery-date" id="delivery-date" required
                         title="Enter a date not earlier than tomorrow">
+                    <span class="error" aria-live="polite"></span>
 
                     <!--Street (mandatory, the length not less than 5 symbols, the numbers are allowed)-->
                     <label for="street">Street</label>
-                    <input type="text" name="street" id="street" required minlength="5" pattern="[a-zA-Z0-9]*"
+                    <input type="text" name="street" id="street" required minlength="5" pattern="[a-zA-Z0-9 ]*"
                         title="Enter a string. Numbers and letters are allowed. Minimum 5 symbols">
+                    <span class="error" aria-live="polite"></span>
 
                     <!--House number(mandatory, numbers only, positive numbers only)-->
                     <label for="house">House:</label>
                     <input type="tel" name="house" id="house" required min="1" step="1" pattern='[1-9]{1}[0-9]*' title="Enter a number not less than 1">
+                    <span class="error" aria-live="polite"></span>
 
                     <!--Flat number(mandatory, numbers only, positive numbers only, the dash symbol is allowed. Means, the flat number
                         shouldn't start with minus/dash symbol. For example: -37 is invalid, but 1-37 is valid)-->
                     <label for="flat">Flat:</label>
-                    <input type="tel" name="flat" id="flat" required min="1" step="1" pattern="[1-9]{1}[0-9]*[-]?[1-9]?[0-9]*"
+                    <input type="tel" name="flat" id="flat" required min="1" step="1" pattern="[1-9]{1}[0-9]*([-]?([1-9]{1}[0-9]*){1})?"
                         title="Enter a number not less than 1. Dash is allowed">
+                    <span class="error" aria-live="polite"></span>
                 </fieldset>
 
                 <fieldset>
                     <legend>Payment info and gifts:</legend>
                     <!--Choose the payment type(radio buttons group): Cash or Card (mandatory)-->
-                    <label for="payment-type" class='group-label'>Payment type:</label>
+                    <label id="payment-type" class='group-label'>Payment type:</label>
+                    <span class="error" aria-live="polite"></span>
                     <div class='radio-group'>
                         <label for="cash">
-                            <input type="radio" name="payment-type" id="cash" value="Cash">
+                            <input type="radio" name="payment-type" id="cash" value="Cash" active>
                             Cash
                         </label>
                         <label for="card">
@@ -66,7 +72,7 @@
                     </div>
 
                     <!--Choose 2 gifts: (optional)-->
-                    <label for="gifts" class='group-label'>Gifts (you may select up to 2):</label>
+                    <label id="gifts" class='group-label'>Gifts <small>(select up to 2)</small>:</label>
                     <div class="radio-group">
                         <label for="gift">
                             <input type="checkbox" name="gifts" id="gift" value="gift">
@@ -88,7 +94,7 @@
                 </fieldset>
 
                 <!--The Complete button is disabled until the user full form with valid information +5-->
-                <button type="submit" disabled>Complete</button>
+                <button type="submit" id="submit" disabled>Complete</button>
 
                 <!--If user left the field empty or fill with invalid data, this field became red (means red border) and the validation
                     message (The field is invalid) is appeared. After user fix data and left the field again, the validation red border

@@ -22,26 +22,55 @@ fieldset {
     margin-bottom: 20px;
     border: 0;
     display: grid;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 100px 1fr 150px;
     grid-gap: 10px;
     width: 600px;
     max-width: 500px;
 
-    -webkit-box-shadow: 3px 2px 9px 0px rgba(173,102,173,0.45);
-    -moz-box-shadow: 3px 2px 9px 0px rgba(173,102,173,0.45);
-    box-shadow: 3px 2px 9px 0px rgba(173,102,173,0.45);
+    -webkit-box-shadow: 3px 2px 12px 0px var(--brand-violet);
+    -moz-box-shadow: 3px 2px 12px 0px var(--brand-violet);
+    box-shadow: 3px 2px 12px 0px var(--brand-violet);
+}
+
+fieldset:last-of-type .error {
+    grid-column: span 2;
 }
 
 input {
     margin-bottom: 10px;
 }
 
+
+input:invalid + span::before {
+  content: "✖";
+  color: red;
+  margin-right: 5px;
+}
+
+input:valid + span::before {
+  content: "✓";
+  color: green;
+  margin-right: 5px;
+}
+
 .group-label {
     margin-bottom: 10px;
+}
+
+label#payment-type.invalid + span::before {
+  content: "✖";
+  color: red;
+  margin-right: 5px;
+}
+
+label#gifts {
+    grid-column: span 3;
 }
 
 .radio-group {
     display: flex;
     flex-direction: column;
+    padding-left: 25px;
     margin-bottom: 10px;
+    grid-column: span 3;
 }

@@ -2,16 +2,21 @@
     --brand-violet: #cab3f5;
     --brand-darker-violet: #b490f6;
     --brand-dark-violet: #803ef9;
+    --brand-accent: orchid;
+    --brand-darker-accent: mediumorchid;
+    --brand-dark-accent: darkorchid;
 
     --brand-danger: #ff0076;
     --brand-focus: #ff683b;
     --brand-highlight: #ffa600;
+
+    --brand-text-color: #545454;
 }
 
 body {
     max-width: 1280px;
     margin: 0 auto;
-    color: #545454;
+    color: var(--brand-text-color);
 }
 
 button, input, select, textarea {
@@ -46,8 +51,8 @@ input[type='checkbox']:checked::before {
 }
 
 input[type="checkbox"]:disabled {
-  border-color: black;
-  background: #ddd;
+  border-color: lightgray;
+  background: #eee;
   color: gray;
 }
 
@@ -68,6 +73,11 @@ input[type='radio']::before {
     right: 2px;
     top: -0.24em;
     font-size: 1.2em;
+    visibility: hidden;
+}
+
+input[type='radio']:checked::before {
+    visibility: visible;
 }
 
 input:invalid {
@@ -86,7 +96,7 @@ input:active {
 .header__ico {
     padding: 6px;
     color: white;
-    border: 1px outset blueviolet;
+    border: 1px outset var(--brand-accent);
 }
 
 .header__bag-ico {
@@ -105,19 +115,29 @@ div, h1, h2, h3, h4, p {
 .wrapper {
     max-width: 1200px;
     margin: 0 auto;
-    /* max-height: 100%; */
 }
 
 button, .button {
     padding: 10px 32px;;
-    background: var(--brand-violet);
+    background: var(--brand-darker-violet);
     border: 0;
     border-radius: 100px;
     cursor: pointer;
 }
 
+button:disabled {
+    background-color: var(--brand-violet);
+    color: gray;
+}
+
 button:not([disabled]):hover {
-    background-color: var(--brand-darker-violet);
+    background-color: var(--brand-dark-accent);
+    color: white;
+}
+
+button:not([disabled]) {
+    background-color: var(--brand-darker-accent);
+    color: white;
 }
 
 a {
