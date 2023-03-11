@@ -23,6 +23,7 @@ fieldset {
     border: 0;
     display: grid;
     grid-template-columns: 100px 1fr 150px;
+    align-items: baseline;
     grid-gap: 10px;
     width: 600px;
     max-width: 500px;

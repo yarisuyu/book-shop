@@ -90,47 +90,43 @@ const formInputs = [
     {
         input: nameInput,
         inputError: nameError,
-        validity: isFieldValid,
-        validations: setValidations({ missing: true, typeMismatch: true, pattern: true, tooShort: true }),
-        showError: function () { showErrorCondition(nameInput, nameError, "name", this.validations, "a string of letters without spaces.") }
+        isValid: function() { return isFieldValid(this.input) }
     },
     {
         input: surname,
         inputError: surnameError,
-        validity: isFieldValid,
-        validations: setValidations({ missing: true, typeMismatch: true, pattern: true, tooShort: true }),
-        showError: function () { showErrorCondition(surname, surnameError, "surname", this.validations, "a string of letters without spaces.") }
+        isValid: function() { return isFieldValid(this.input) }
     },
     {
         input: deliveryDate,
         inputError: deliveryDateError,
-        validity: isDeliveryDateValid,
-        validations: setValidations({ missing: true, typeMismatch: true, pattern: true, rangeUnderflow: true }),
-        showError: function () { showErrorCondition(deliveryDate, deliveryDateError, "delivery-date", this.validations, "a date not earlier than tomorrow.") }
+        isValid: function() { return isDeliveryDateValid(this.input) }
     },
     {
         input: street,
         inputError: streetError,
-        validity: isFieldValid,
-        validations: setValidations({ missing: true, typeMismatch: true, pattern: true, tooShort: true }),
-        showError: function () { showErrorCondition(street, streetError, "street", this.validations, "a string, numbers are allowed.") }
+        isValid: function() { return isFieldValid(this.input) }
     },
     {
         input: house,
         inputError: houseError,
-        validity: isFieldValid,
-        validations: setValidations({ missing: true, typeMismatch: true, pattern: true, rangeUnderflow: true }),
-        showError: function () { showErrorCondition(house, houseError, "house", this.validations, "a positive integer.") }
+        isValid: function() { return isFieldValid(this.input) }
     },
     {
         input: flat,
         inputError: flatError,
-        validity: isFieldValid,
-        validations: setValidations({ missing: true, typeMismatch: true, pattern: true, rangeUnderflow: true }),
-        showError: function () { showErrorCondition(flat, flatError, "house", this.validations, "a positive integer, the dash symbol is allowed, shouldn't start with minus/dash symbol.") }
+        isValid: function() { return isFieldValid(this.input) }
     },
-    { input: payments, inputError: paymentError, validity: isPaymentValid, validations: {}, showError: showPaymentError },
-    { input: gifts, inputError: giftsError, validity: isGiftsValid, validations: {}, showError: () => { } },
+    {
+        input: payments,
+        inputError: paymentError,
+        isValid: function() { return isPaymentValid(this.input) }
+    },
+    {
+        input: gifts,
+        inputError: giftsError,
+        isValid: function() { return isGiftsValid(this.input) }
+    },
 ];
 
 form.addEventListener("change", (event) => {
@@ -164,11 +160,12 @@ form.addEventListener("input", (event) => {
         console.log(inp.input.name);
         if (inp.input instanceof NodeList && inp.input[0].name === input.name ||
             inp.input.name === input.name) {
-            if (inp.validity(input)) {
+            if (inp.isValid(inp.input)) {
                 inp.inputError.innerText = ""; // Reset the content of the message
                 inp.inputError.className = "error"; // Reset the visual state of the message
             } else {
-                inp.showError();
+                inp.input.className = "error active";
+                inp.inputError.innerText = "The field is invalid";
             }
             setFormValidity();
             break;
@@ -193,7 +190,7 @@ function isDeliveryDateValid() {
 
 function isFormValid() {
     for (const inputData of formInputs) {
-        if (!inputData.validity(inputData.input)) {
+        if (!inputData.isValid(inputData.input)) {
             return false;
         }
     }
@@ -220,30 +217,6 @@ form.addEventListener("submit", (event) => {
 
     showSentInfo();
 });
-
-function showErrorCondition(input, errorIndicator, inputName, validations, patternDesc) {
-    console.log(...arguments);
-    if (!validations) return;
-    console.log("showErrorCondition");
-    if (validations.missing && input.validity.valueMissing) {
-        errorIndicator.innerText += `Please, enter your ${inputName}.`;
-    }
-    if (validations.typeMismatch && input.validity.typeMismatch) {
-        errorIndicator.innerText = "Entered value needs to be a string.";
-    }
-    if (validations.pattern && input.validity.patternMismatch) {
-        errorIndicator.innerText = `Entered value needs to be ${patternDesc}.`;
-    }
-    if (validations.tooShort && input.validity.tooShort) {
-        errorIndicator.innerText = `${inputName.charAt(0).toUpperCase() + inputName.slice(1)} should be at least ${input.minLength} characters; you entered ${input.value.length}.`;
-    }
-
-    if (validations.rangeUnderflow && input.validity.rangeUnderflow) {
-        errorIndicator.innerText = `Entered value should be larger than ${input.min}; you entered ${input.value}.`;
-    }
-
-    input.className = "error active";
-}
 
 
 function hidePaymentError() {
