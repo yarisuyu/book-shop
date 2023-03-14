@@ -1,16 +1,34 @@
 :root{
-    --brand-violet: #cab3f5;
-    --brand-darker-violet: #b490f6;
-    --brand-dark-violet: #803ef9;
-    --brand-accent: orchid;
-    --brand-darker-accent: mediumorchid;
-    --brand-dark-accent: darkorchid;
+    --brand-color: #ABD1B5;
+    --brand-darker-color: #79B791;
+    --brand-dark-color: #396A4C;
+    --brand-accent: #8DAEE2;
+    --brand-darker-accent: #3066BE;
+    --brand-dark-accent: #264F92;
 
-    --brand-danger: #ff0076;
+    --brand-danger: #B7245C;
     --brand-focus: #ff683b;
     --brand-highlight: #ffa600;
 
-    --brand-text-color: #545454;
+    --brand-text-color: #212738;
+    --brand-text-light-color: ivory;
+}
+
+
+/* candy pop - latin */
+@font-face {
+  font-family: 'Candy pop';
+  font-style: normal;
+  src: local(''),
+       url('../fonts/Candy_Pop!-demo-font.ttf')
+}
+
+/* simplicity - latin */
+@font-face {
+  font-family: 'simplicity';
+  font-style: normal;
+  src: local(''),
+       url('../fonts/simplicity.ttf')
 }
 
 body {
@@ -34,7 +52,7 @@ input[type="checkbox"] {
     height: 1em;
     border: 1px solid gray;
     vertical-align: text-top;
-    color: var(--brand-dark-violet);
+    color: var(--brand-dark-color);
 }
 
 input[type='checkbox']::before {
@@ -64,7 +82,7 @@ input[type='radio'] {
     border-radius: 50%;
     border: 1px solid gray;
     vertical-align: text-top;
-    color: var(--brand-dark-violet);
+    color: var(--brand-dark-color);
 }
 
 input[type='radio']::before {
@@ -89,18 +107,33 @@ input:active {
 }
 
 .header {
-    height: 50px;
-    background-color: var(--brand-darker-violet);
+    height: 70px;
+    background-color: var(--brand-darker-color);
 }
 
 .header__ico {
     padding: 6px;
-    color: white;
-    border: 1px outset var(--brand-accent);
+    color: var(--brand-text-light-color);
+    font-family: 'Candy pop';
+    font-size: 24px;
+}
+
+.header__motto {
+    color: var(--brand-dark-color);
+    font-size: 28px;
+    font-family: 'simplicity';
+}
+
+.header__bag {
+    color: var(--brand-text-light-color);
 }
 
 .header__bag-ico {
     width: 20px;
+}
+
+.header__bag-sum {
+    padding: 8px;
 }
 
 .footer {
@@ -115,36 +148,37 @@ div, h1, h2, h3, h4, p {
 .wrapper {
     max-width: 1200px;
     margin: 0 auto;
+    height: 100%;
 }
 
 button, .button {
     padding: 10px 32px;;
-    background: var(--brand-darker-violet);
+    background: var(--brand-darker-color);
     border: 0;
     border-radius: 100px;
     cursor: pointer;
 }
 
 button:disabled {
-    background-color: var(--brand-violet);
+    background-color: var(--brand-color);
     color: gray;
 }
 
 button:not([disabled]):hover {
-    background-color: var(--brand-dark-accent);
-    color: white;
+    background-color: var(--brand-dark-color);
+    color: var(--brand-text-light-color);
 }
 
 button:not([disabled]) {
-    background-color: var(--brand-darker-accent);
-    color: white;
+    background-color: var(--brand-darker-color);
+    color: var(--brand-text-light-color);
 }
 
 a {
     font-family: 'Georgia', 'Roboto Serif', serif;
     font-size: 17px;
     line-height: 130%;
-    color: var(--brand-dark-violet);
+    color: var(--brand-dark-color);
 
     display: inline-block;
     text-decoration: none;

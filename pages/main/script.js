@@ -44,59 +44,64 @@ document.getElementById("app").appendChild(fragment);
 const renderDescPopup = function(container, header, author, description) {
     let descContainer = addElement(container, 'div', 'popup__content');
     let descHeader = addElement(descContainer, 'div', 'popup__header');
-    let descTitle = addElement(descHeader, 'h2', 'popup__title', header);
+    addElement(descHeader, 'h2', 'popup__title', header);
 
-    let close = addElement(descHeader, 'a', 'close', 'x', null, new Map(['href', '#']));
-    let descAuthor = addElement(descContainer, 'h3', 'popup__author', author);
-    let descText = addElement(descContainer, 'p', 'popup__description', description);
+    let closeBtn = addElement(descHeader, 'a', 'close', null, null,
+        new Map([
+        ['href', '#']
+        ]));
+
+    addElement(closeBtn, 'i', 'fa-solid fa-xmark');
+
+    addElement(descContainer, 'h3', 'popup__author', author);
+    addElement(descContainer, 'p', 'popup__description', description);
 }
 
 const renderHeader = function () {
     let wrapper = addElement(header, 'div','wrapper');
-    let icon = addElement(wrapper, 'div', 'header__ico', 'BookShop');
-
-    let bag = document.createElement('div');
-    bag.className = 'header__bag';
-
-    let bagIco = addElement(bag, 'img', 'header__bag-ico', null, null,
+    let icoContainer = addElement(wrapper, 'div');
+    addElement(icoContainer, 'a', 'header__ico', 'BookShop', null,
         new Map([
-            ['src', '../../assets/icons/bag-ico.png'],
+            ['src', '/']
+        ]));
+
+    addElement(wrapper, 'div', 'header__motto', 'Books build a stairway to your imagination')
+
+    let bag = addElement(wrapper, 'div', 'header__bag', null, null,
+        new Map([
             ['ondrop', 'drop(event)'],
             ['ondragover', 'allowDrop(event)']
         ]));
 
-    bag.append(bagIco);
+    //<i class="fa-solid fa-cart-shopping"></i> empty cart
+    addElement(bag, 'i', 'header__bag-ico fa-solid fa-cart-shopping');
 
-    let bagSum = addElement(bag, 'div', 'cart__sum');
-
-    wrapper.append(bag);
+    addElement(bag, 'span', 'header__bag-sum', ' 0$ ', 'header-cart');
+    addElement(bag, 'i', 'header__bag-show-ico fa-solid fa-angle-down', null, null,
+        new Map([
+            ['onclick', 'showCart(event)']
+        ]));
 }
 
 const renderBook = function (container, id, item) {
-    let book = addElement(container, 'div', null, null,
-        new Map([
-            ['draggable', true],
-            ['ondragstart', 'drag(event)']
-        ]
-        ));
+    let book = document.createElement('div');
+    book.draggable = true;
+    book.addEventListener('dragstart', drag);
 
-    let figure = document.createElement('figure');
-    book.append(figure);
+    let figure = addElement(book, 'figure');
 
-    let img = addElement(figure, 'img', 'books__book-img', null, id,
+    addElement(figure, 'img', 'books__book-img', null, id,
         new Map([
             ['src', item.imageLink],
             ['width', '150'],
             ['height', '220']
         ]
     ));
-    let figcaption = document.createElement('figcaption');
-    figcaption.className = 'books__book-caption';
-    figure.append(figcaption);
+    let figcaption = addElement(figure, 'figcaption', 'books__book-caption');
 
-    let bookName = addElement(figcaption, 'p', 'books__book-title', item.title);
-    let bookAuthor = addElement(figcaption, 'p', 'books__book-author', item.author);
-    let bookPrice = addElement(figcaption, 'p', 'books__book-price', item.price + "$");
+    addElement(figcaption, 'p', 'books__book-title', item.title);
+    addElement(figcaption, 'p', 'books__book-author', item.author);
+    addElement(figcaption, 'p', 'books__book-price', item.price + "$");
     let buttons = addElement(figcaption, 'div', 'books__book-buttons');
 
     let showLink = addElement(buttons, 'a', 'books__book-info-link', 'Show more', null,
@@ -107,19 +112,17 @@ const renderBook = function (container, id, item) {
         renderDescPopup(popupContainer, item.title, item.author, item.description);
     })
 
-    let addBtn = document.createElement('button');
-    addBtn.innerText = 'Add to bag';
+    let addBtn = addElement(buttons, 'button', null, 'Add to bag');
 
     addBtn.addEventListener('click', (event) => {
-        console.log(event);
-        console.log(item);
         addToCart({ ...item, id });
     });
-    buttons.append(addBtn);
+
+    container.appendChild(book);
 }
 
 const renderMain = function () {
-    let heading = addElement(main, 'h1', 'books__heading', 'Book Catalog');
+    addElement(main, 'h1', 'books__heading', 'Book Catalog');
 
     let i = 0;
     fetch('/assets/data/books.json')
@@ -127,8 +130,11 @@ const renderMain = function () {
             return response.json();
         })
         .then(data => {
-            let bookContainer = addElement (main, 'div', 'books');
-            data.forEach(book => renderBook(bookContainer, i++, book));
+            let bookContainer = addElement(main, 'div', 'books');
+            var booksFragment = new DocumentFragment();
+
+            data.forEach(book => renderBook(booksFragment, i++, book));
+            bookContainer.appendChild(booksFragment);
         });
 }
 
@@ -139,6 +145,15 @@ const renderFooter = function () {
 renderHeader();
 renderMain();
 renderFooter();
+
+function updateCartSum(price) {
+    let sum = +localStorage.getItem('shoppingCartSum');
+    sum += price;
+    localStorage.setItem('shoppingCartSum', sum);
+
+    let headerCart = document.getElementById('header-cart');
+    headerCart.innerText = `Total ${sum}$`;
+}
 
 
 function drag(ev) {
@@ -196,9 +211,7 @@ function drop(ev) {
     console.log(JSON.stringify(Object.fromEntries(shoppingCart)));
     localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
 
-    let sum = +localStorage.getItem('shoppingCartSum');
-    sum += +book.price;
-    localStorage.setItem('shoppingCartSum', sum);
+    updateCartSum(+book.price);
 }
 
 function addToCart(data) {
@@ -231,12 +244,7 @@ function addToCart(data) {
     console.log(JSON.stringify(Object.fromEntries(shoppingCart)));
     localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
 
-    let sum = +localStorage.getItem('shoppingCartSum');
-    sum += +book.price;
-    localStorage.setItem('shoppingCartSum', sum);
-
-    // add cart item count
-    let bag = document.querySelector('.header__bag');
+    updateCartSum(+book.price);
 
 }
 

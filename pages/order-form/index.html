@@ -14,20 +14,20 @@
     </header>
     <main>
         <div class="wrapper">
-            <h2>Order form</h2>
-            <form action="" method="post" novalidate>
+            <form id="order-form" class="order-form" action="" method="post" novalidate>
+                <h2>Order form</h2>
                 <fieldset>
                     <legend>Delivery address:</legend>
                     <!--Name (mandatory, the length not less than 4 symbols, strings only, without spaces)-->
                     <label for="name">Name:</label>
                     <input type="text" name="name" id="name" required autofocus minlength="4" pattern="[a-zA-Z]*"
-                        title="Enter a string without spaces. Minimum 4 symbols">
+                        title="Enter a string without spaces. Minimum 4 symbols" placeholder="Sherlock">
                     <span class="error" aria-live="polite"></span>
 
                     <!--Surname (mandatory, the length not less than 5 symbols, strings only, without spaces)-->
                     <label for="surname">Surname:</label>
                     <input type="text" name="surname" id="surname" required minlength="5" pattern="[a-zA-Z]*"
-                        title="Enter a string without spaces. Minimum 5 symbols">
+                        title="Enter a string without spaces. Minimum 5 symbols" placeholder="Holmes">
                     <span class="error" aria-live="polite"></span>
 
                     <!--Delivery date(mandatory, not earlier than next day)-->
@@ -39,19 +39,19 @@
                     <!--Street (mandatory, the length not less than 5 symbols, the numbers are allowed)-->
                     <label for="street">Street</label>
                     <input type="text" name="street" id="street" required minlength="5" pattern="[a-zA-Z0-9 ]*"
-                        title="Enter a string. Numbers and letters are allowed. Minimum 5 symbols">
+                        title="Enter a string. Numbers and letters are allowed. Minimum 5 symbols" placeholder="Baker street">
                     <span class="error" aria-live="polite"></span>
 
                     <!--House number(mandatory, numbers only, positive numbers only)-->
                     <label for="house">House:</label>
-                    <input type="tel" name="house" id="house" required min="1" step="1" pattern='[1-9]{1}[0-9]*' title="Enter a number not less than 1">
+                    <input type="tel" name="house" id="house" required min="1" step="1" pattern='[1-9]{1}[0-9]*' title="Enter a number not less than 1" placeholder="10">
                     <span class="error" aria-live="polite"></span>
 
                     <!--Flat number(mandatory, numbers only, positive numbers only, the dash symbol is allowed. Means, the flat number
                         shouldn't start with minus/dash symbol. For example: -37 is invalid, but 1-37 is valid)-->
                     <label for="flat">Flat:</label>
                     <input type="tel" name="flat" id="flat" required min="1" step="1" pattern="[1-9]{1}[0-9]*([-]?([1-9]{1}[0-9]*){1})?"
-                        title="Enter a number not less than 1. Dash is allowed">
+                        title="Enter a number not less than 1. Dash is allowed. -37 invalid. 1-37 valid." placeholder="1">
                     <span class="error" aria-live="polite"></span>
                 </fieldset>
 
@@ -62,7 +62,7 @@
                     <span class="error" aria-live="polite"></span>
                     <div class='radio-group'>
                         <label for="cash">
-                            <input type="radio" name="payment-type" id="cash" value="Cash" active>
+                            <input type="radio" name="payment-type" id="cash" value="Cash">
                             Cash
                         </label>
                         <label for="card">
@@ -76,38 +76,33 @@
                     <div class="radio-group">
                         <label for="gift">
                             <input type="checkbox" name="gifts" id="gift" value="gift">
-                            Pack as a gift
+                            <span>Pack as a gift</span>
                         </label>
                         <label for="postcard">
                             <input type="checkbox" name="gifts" id="postcard" value="postcard">
-                            Add postcard
+                            <span>Add postcard</span>
                         </label>
                         <label for="discount">
                             <input type="checkbox" name="gifts" id="discount" value="discount">
-                            Provide 2% discount to the next time
+                            <span>Provide 2% discount to the next time</span>
                         </label>
                         <label for="pen">
                             <input type="checkbox" name="gifts" id="pen" value="pen">
-                            Branded pen or pencil
+                            <span>Branded pen or pencil</span>
                         </label>
                     </div>
                 </fieldset>
 
                 <!--The Complete button is disabled until the user full form with valid information +5-->
                 <button type="submit" id="submit" disabled>Complete</button>
-
-                <!--If user left the field empty or fill with invalid data, this field became red (means red border) and the validation
-                    message (The field is invalid) is appeared. After user fix data and left the field again, the validation red border
-                    and message should disappear. +5
-                    After user fill all mandatory field with valid information, the Complete button become active. +10
-                    After user click on Complete button, he will see the summarized information: for instance, The order created. The
-                    delivery address is Amazing street house 3 flat 10. Customer John Gald. 5-->
             </form>
+
+            <div class="form-summary" id="summary"></div>
         </div>
     </main>
 
     <footer class="footer"></footer>
-    <script type="text/javascript" src="script.js"></script>
+    <script type="module" src="script.js"></script>
 
 </body>
 </html>

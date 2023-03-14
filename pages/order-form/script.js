@@ -1,15 +1,4 @@
-function setMinDeliveryDate() {
-    const DAY = 24 * 60 * 60 * 1000;
-    const NOW = Date.now();
-    const tomorrow = NOW - (NOW % DAY) + DAY;
-    const minDate = new Date(tomorrow);
-    const isoDate = minDate.toISOString();
-    console.log(isoDate.slice(0, isoDate.indexOf('T')));
-
-    const deliveryDateInput = document.getElementById("delivery-date");
-    deliveryDateInput.min = isoDate.slice(0, isoDate.indexOf('T'));
-}
-setMinDeliveryDate();
+import { addElement } from "../../assets/scripts/helper.js"
 
 const submitBtn = document.getElementById("submit");
 
@@ -35,10 +24,26 @@ const payments = document.getElementsByName("payment-type");
 const paymentError = document.querySelector("#payment-type + span.error");
 
 const gifts = document.getElementsByName("gifts");
-const giftsError = document.querySelector("#gifts + span.error");
+const giftsError = undefined;
 
 const form = document.querySelector("form");
 
+
+function formatDate(date) {
+    const isoDate = date.toISOString();
+    return isoDate.slice(0, isoDate.indexOf('T'));
+}
+
+function setMinDeliveryDate() {
+    const DAY = 24 * 60 * 60 * 1000;
+    const NOW = Date.now();
+    const tomorrow = NOW - (NOW % DAY) + DAY;
+    const minDate = new Date(tomorrow);
+
+    deliveryDate.min = formatDate(minDate);
+}
+
+setMinDeliveryDate();
 
 function isFieldValid(field) {
     if (field.valueMissing || !field.validity.valid) {
@@ -76,56 +81,103 @@ function isGiftsValid() {
     return true;
 }
 
-const setValidations = ({ missing = false, typeMismatch = false, pattern = false, tooShort = false, rangeUnderflow = false } = {}) => {
-    return {
-        missing,
-        typeMismatch,
-        pattern,
-        tooShort,
-        rangeUnderflow
-    };
+function printInput(container, input, printValue = undefined) {
+    const row = addElement(container, "div", "summary-row");
+    const labelText = (input instanceof NodeList) ? input.item(0).name : input.id;
+    const dashless = labelText.replace("-", " ");
+    const capitalizedLabel =
+        dashless.charAt(0).toUpperCase()
+        + dashless.slice(1);
+
+    addElement(row, "span", "summary-row-label", `${capitalizedLabel}: `);
+    let printedValue = "";
+    if (typeof printValue === "function") {
+        printedValue = printValue(input);
+    } else {
+        printedValue = input.value;
+    }
+    addElement(row, "span", "summary-row-value", printedValue);
 }
 
 const formInputs = [
     {
         input: nameInput,
         inputError: nameError,
-        isValid: function() { return isFieldValid(this.input) }
+        isValid: function () { return isFieldValid(this.input) },
+        print: function (container) { printInput(container, this.input); }
     },
     {
         input: surname,
         inputError: surnameError,
-        isValid: function() { return isFieldValid(this.input) }
+        isValid: function() { return isFieldValid(this.input) },
+        print: function (container) { printInput(container, this.input); }
     },
     {
         input: deliveryDate,
         inputError: deliveryDateError,
-        isValid: function() { return isDeliveryDateValid(this.input) }
+        isValid: function() { return isDeliveryDateValid(this.input) },
+        print: function (container) { printInput(container, this.input); }
     },
     {
         input: street,
         inputError: streetError,
-        isValid: function() { return isFieldValid(this.input) }
+        isValid: function() { return isFieldValid(this.input) },
+        print: function (container) { printInput(container, this.input); }
     },
     {
         input: house,
         inputError: houseError,
-        isValid: function() { return isFieldValid(this.input) }
+        isValid: function() { return isFieldValid(this.input) },
+        print: function (container) { printInput(container, this.input); }
     },
     {
         input: flat,
         inputError: flatError,
-        isValid: function() { return isFieldValid(this.input) }
+        isValid: function() { return isFieldValid(this.input) },
+        print: function (container) { printInput(container, this.input); }
     },
     {
         input: payments,
         inputError: paymentError,
-        isValid: function() { return isPaymentValid(this.input) }
+        isValid: function() { return isPaymentValid(this.input) },
+        print: function (container) {
+            printInput(container, this.input, inputs => {
+                let result = "";
+                for (let input of inputs) {
+                    if (input.checked) {
+                        result = input.value;
+                        break;
+                    }
+                }
+                return result;
+            });
+        }
     },
     {
         input: gifts,
         inputError: giftsError,
-        isValid: function() { return isGiftsValid(this.input) }
+        isValid: function() { return isGiftsValid(this.input) },
+        print: function (container) {
+            let giftsChecked = false;
+            for (let input of this.input) {
+                if (input.checked) {
+                    giftsChecked = true;
+                    break;
+                }
+            }
+            if (!giftsChecked) return;
+
+            printInput(container, this.input, inputs => {
+                let result = "";
+                for (let input of inputs) {
+                    if (input.checked) {
+                        const textSpan = input.nextElementSibling;
+                        result += `${textSpan.innerText}; `;
+                    }
+                }
+                return result;
+            });
+        }
     },
 ];
 
@@ -147,8 +199,10 @@ form.addEventListener("change", (event) => {
                 }
             }
         }
-        return;
+
+        setFormValidity();
     }
+
 });
 
 
@@ -157,9 +211,11 @@ form.addEventListener("input", (event) => {
     const input = event.target;
 
     for (let inp of formInputs) {
-        console.log(inp.input.name);
-        if (inp.input instanceof NodeList && inp.input[0].name === input.name ||
+        if (inp.input instanceof NodeList && inp.input.item(0).name === input.name ||
             inp.input.name === input.name) {
+            if (inp.inputError === undefined) {
+                break;
+            }
             if (inp.isValid(inp.input)) {
                 inp.inputError.innerText = ""; // Reset the content of the message
                 inp.inputError.className = "error"; // Reset the visual state of the message
@@ -179,8 +235,6 @@ function isDeliveryDateValid() {
     const DAY = 24 * 60 * 60 * 1000;
     const NOW = Date.now();
     const tomorrow = NOW - (NOW % DAY) + DAY;
-    console.log(`NOW: ${NOW}`);
-    console.log(`Tomorrow: ${tomorrow}`);
     if (deliveryDate.valueMissing || date < tomorrow) {
         return false;
     }
@@ -210,6 +264,26 @@ function setFormValidity() {
     else {
         submitBtn.disabled = true;
     }
+}
+
+function showSentInfo() {
+    submitBtn.disabled = true;
+
+    const form = document.getElementById("order-form");
+    form.classList.add("hidden");
+
+    const summary = document.getElementById("summary");
+    while (summary.firstChild) {
+        summary.removeChild(summary.firstChild);
+    }
+
+    addElement(summary, "h2", "form-summary__header", "The order was created: ");
+
+
+    for (let inputData of formInputs) {
+        inputData.print(summary);
+    }
+    summary.classList.add("visible");
 }
 
 form.addEventListener("submit", (event) => {
