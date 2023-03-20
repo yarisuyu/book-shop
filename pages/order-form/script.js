@@ -89,7 +89,7 @@ function printInput(container, input, printValue = undefined) {
         dashless.charAt(0).toUpperCase()
         + dashless.slice(1);
 
-    addElement(row, "span", "summary-row-label", `${capitalizedLabel}: `);
+    addElement(row, "span", "summary__row-label", `${capitalizedLabel}: `);
     let printedValue = "";
     if (typeof printValue === "function") {
         printedValue = printValue(input);
@@ -266,19 +266,20 @@ function setFormValidity() {
     }
 }
 
-function showSentInfo() {
+
+function showSentInfo(summary) {
     submitBtn.disabled = true;
 
     const form = document.getElementById("order-form");
     form.classList.add("hidden");
 
-    const summary = document.getElementById("summary");
     while (summary.firstChild) {
         summary.removeChild(summary.firstChild);
     }
 
     addElement(summary, "h2", "form-summary__header", "The order was created: ");
 
+    printBooksInCart(summary);
 
     for (let inputData of formInputs) {
         inputData.print(summary);
@@ -286,10 +287,51 @@ function showSentInfo() {
     summary.classList.add("visible");
 }
 
+function renderCartItem(bookItem, book) {
+    addElement(bookItem, 'div', 'summary__book-title', book.title);
+    addElement(bookItem, 'div', 'summary__book-author', book.author);
+    addElement(bookItem, 'div', 'summary__book-price', `${book.price}$`);
+    addElement(bookItem, 'div', 'summary__book-count', book.count);
+}
+
+function printBooksInCart(container) {
+    let cart = localStorage.getItem('shoppingCart');
+
+    let bookContainer = addElement(container, 'div', 'summary__books');
+    let fragment = new DocumentFragment();
+
+    // cart is stored as a stringified Map of id : {...book, count}
+    let shoppingCart = new Map(Object.entries(JSON.parse(cart) ?? []));
+
+    let sum = 0;
+    shoppingCart.forEach(book => {
+        let bookItem = document.createElement('div');
+        bookItem.className = 'summary__book';
+
+        renderCartItem(bookItem, book);
+        fragment.appendChild(bookItem);
+
+        sum += parseFloat(book.price) * parseInt(book.count);
+    });
+
+    bookContainer.appendChild(fragment);
+
+    let totalSum = document.createElement('div');
+    totalSum.innerHTML = `<b>Total</b> ${sum}$`;
+    container.appendChild(totalSum);
+}
+
+function clearCart() {
+    localStorage.removeItem('shoppingCart');
+}
+
 form.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    showSentInfo();
+    const summary = document.getElementById("summary");
+    showSentInfo(summary);
+
+    clearCart();
 });
 
 

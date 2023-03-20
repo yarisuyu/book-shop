@@ -101,6 +101,16 @@ label#gifts {
     width: 100%;
 }
 
-.summary-row-label {
+.summary__books {
+    max-width: 800px;
+    margin-bottom: 30px;
+}
+
+.summary__book {
+    display: grid;
+    grid-template-columns: 1fr 200px 30px 30px;
+}
+
+.summary__row-label {
     font-weight: bold;
 }
