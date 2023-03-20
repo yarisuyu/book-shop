@@ -10,7 +10,7 @@
     height: 100%;
     left: 0;
     top: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     display: none;
 }
 
@@ -54,7 +54,7 @@
 .books__heading {
     font-weight: bold;
     text-align: center;
-    color: var(--brand-dark-color);
+    color: var(--brand-dark-accent);
 }
 
 .books__book-img {

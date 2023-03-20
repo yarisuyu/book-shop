@@ -120,8 +120,9 @@ input:active {
 
 .header__motto {
     color: var(--brand-dark-color);
-    font-size: 28px;
+    font-size: 20px;
     font-family: 'simplicity';
+    letter-spacing: 0.2em;
 }
 
 .header__bag {
@@ -153,7 +154,7 @@ div, h1, h2, h3, h4, p {
 
 button, .button {
     padding: 10px 32px;;
-    background: var(--brand-darker-color);
+    background-color: var(--brand-darker-color);
     border: 0;
     border-radius: 100px;
     cursor: pointer;
@@ -190,35 +191,113 @@ a:hover {
     font-weight: bold;
 }
 
+.cart__confirm-btn {
+    width: 94px;
+    padding: 4px 13px;
+    background-color: var(--brand-color);
+    color: var(--brand-text-light-color);
+    border-radius: 100px;
+}
+
+.cart__confirm-btn:hover {
+    background-color: var(--brand-darker-color);
+    font-weight: 300;
+}
+
 
 h3 {
-    font-family: 'Georgia', 'Roboto Serif', serif;
-    font-size: 35px;
+    font-size: 18px;
     line-height: 130%;
     text-align: center;
     letter-spacing: 0.06em;
 }
 
 .cart {
-    display: none;
+    display: block;
     position: fixed;
-    top: 30px;
-    right: 15px;
-    border: 1px solid black;
-    z-index: 9;
+    top: 70px;
+    right: 164px;
+    border: 1px solid lightgray;
+    min-width: 300px;
+    z-index: 5;
 }
 
-.cart__form {
-    max-width: 300px;
-    padding: 10px;
+.cart__wrapper {
+    min-width: 500px;
+    padding: 20px 30px;
     background-color: #fff;
+    color: var(--brand-text-color);
 }
 
-.cart__header {
-
+.cart__header{
+    border-bottom: 3px solid var(--brand-accent);
+    padding-bottom: 6px;
 }
 
-.cart__books {
+.cart__book {
     display: grid;
-    grid-template-columns: 1fr 30px 10px 10px;
+    grid-template-columns: 210px 130px 20px 40px 10px;
+    grid-gap: 30px;
+    justify-content: center;
+    align-items: baseline;
+    padding-bottom: 20px;
+}
+
+.cart__book-count-btn:not([disabled]) {
+    display: inline;
+    color: var(--brand-text-color);
+    background-color: inherit;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+}
+
+
+.cart__book-count-btn:not([disabled]):hover {
+    display: inline;
+    color: var(--brand-dark-color);
+    background-color: inherit;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+}
+
+.cart__book-count-btn:disabled {
+    color: gray;
+    background-color: inherit;
+    padding: 0;
+    border: 0;
+    cursor: default;
+}
+
+.cart__book-count-value {
+    margin: 0 5px;
+}
+
+.cart__book-remove:hover {
+    color: var(--brand-dark-color);
+    cursor: pointer;
+}
+
+.cart__total-sum {
+    padding-bottom: 20px;
+}
+
+.cart__buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+button.cart__clear-btn {
+    border: 0;
+    padding: 0;
+    margin-right: 10px;
+    background-color: inherit;
+    color: var(--brand-color);
+}
+
+button.cart__clear-btn:hover {
+    background-color: inherit;
+    color: var(--brand-dark-color);
 }
