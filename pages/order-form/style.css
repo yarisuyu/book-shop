@@ -52,13 +52,13 @@ input {
 }
 
 
-input:invalid + span.error::before {
+input:invalid:not(:focus) + span.error::before {
   content: "✖";
   color: red;
   margin-right: 5px;
 }
 
-input:valid + span.error::before {
+input:valid:not(:focus) + span.error::before {
   content: "✓";
   color: green;
   margin-right: 5px;
@@ -70,7 +70,7 @@ input:valid + span.error::before {
 
 label#payment-type.invalid + span::before {
   content: "✖";
-  color: var(--brand-danger);
+  color: red;
   margin-right: 5px;
 }
 

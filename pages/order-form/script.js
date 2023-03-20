@@ -206,7 +206,7 @@ form.addEventListener("change", (event) => {
 });
 
 
-form.addEventListener("input", (event) => {
+form.addEventListener("change", (event) => {
     event.stopPropagation();
     const input = event.target;
 
