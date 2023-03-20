@@ -219,7 +219,7 @@ function renderCart(outerContainer) {
                 ['title', 'Clear cart']
             ]));
         addElement(buttons, 'a', 'cart__confirm-btn small', 'Confirm order', null, new Map([
-            ['href', '../order-wrapper'],
+            ['href', '../order-form'],
             ['title', 'Confirm order']
         ]));
     } else {
