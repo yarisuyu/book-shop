@@ -79,7 +79,7 @@ const renderHeader = function () {
     let toggleCartIco = addElement(bag, 'i', 'header__bag-show-ico fa-solid fa-angle-down', null, 'cart-toggler');
     toggleCartIco.addEventListener('click', toggleCartOpen);
 
-    updateCartSum();
+    updateHeaderCartSum();
 }
 
 const renderBook = function (container, id, item) {
@@ -130,7 +130,7 @@ const renderMain = function () {
     addElement(main, 'h1', 'books__heading', 'Book Catalog');
 
     let i = 0;
-    fetch('/assets/data/books.json')
+    fetch('../../assets/data/books.json')
         .then(response => {
             return response.json();
         })
@@ -317,7 +317,7 @@ function toggleCartOpen() {
     }
 }
 
-function updateCartSum() {
+function updateHeaderCartSum() {
     let cart = localStorage.getItem('shoppingCart');
 
     // cart is stored as a stringified Map of id : {...book, count}
@@ -366,7 +366,7 @@ function drop(ev) {
     };
 
     addBookToStorage(id, book);
-    updateCartSum();
+    updateHeaderCartSum();
 
     refreshCart();
 }
@@ -385,7 +385,7 @@ function addToCart(data) {
 
     addBookToStorage(id, book);
 
-    updateCartSum();
+    updateHeaderCartSum();
 
     refreshCart();
 }
@@ -400,7 +400,7 @@ function removeBookFromCart(event) {
     shoppingCart.delete(bookId);
     localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
 
-    updateCartSum();
+    updateHeaderCartSum();
 
     // if it was the last book, close cart
     if (shoppingCart.size === 0) {
@@ -433,7 +433,7 @@ function decBookCountInCart(event) {
 
     localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
 
-    updateCartSum();
+    updateHeaderCartSum();
 
     refreshCart();
 }
@@ -457,14 +457,14 @@ function incBookCountInCart(event) {
 
     localStorage.setItem('shoppingCart', JSON.stringify(Object.fromEntries(shoppingCart)));
 
-    updateCartSum();
+    updateHeaderCartSum();
 
     refreshCart();
 }
 
 function clearCart() {
     localStorage.removeItem('shoppingCart');
-    updateCartSum();
+    updateHeaderCartSum();
 
     toggleCartOpen();
 }
