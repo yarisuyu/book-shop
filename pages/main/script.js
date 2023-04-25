@@ -41,10 +41,10 @@ fragment.appendChild(footer);
 
 document.getElementById("app").appendChild(fragment);
 
-const renderDescPopup = function(container, header, author, description) {
-    let descContainer = addElement(container, 'div', 'popup__content');
+const renderDescPopup = function (container, item) {
+    let descContainer = addElement(container, 'div', 'popup__container');
     let descHeader = addElement(descContainer, 'div', 'popup__header');
-    addElement(descHeader, 'h2', 'popup__title', header);
+    addElement(descHeader, 'h2', 'popup__title', item.title);
 
     let closeBtn = addElement(descHeader, 'a', 'close', null, null,
         new Map([
@@ -53,8 +53,18 @@ const renderDescPopup = function(container, header, author, description) {
 
     addElement(closeBtn, 'i', 'fa-solid fa-xmark');
 
-    addElement(descContainer, 'h3', 'popup__author', author);
-    addElement(descContainer, 'p', 'popup__description', description);
+    addElement(descContainer, 'img', 'popup__img', null, null, new Map(
+        [
+            ['src', item.imageLink],
+            ['width', '225'],
+            ['height', '330']
+        ]
+    ));
+
+    let descContent = addElement(descContainer, 'div', 'popup__content');
+
+    addElement(descContent, 'h3', 'popup__author', item.author);
+    addElement(descContent, 'p', 'popup__description', item.description);
 }
 
 const renderHeader = function () {
@@ -87,7 +97,7 @@ const renderBook = function (container, id, item) {
     book.draggable = true;
     book.addEventListener('dragstart', drag);
 
-    let figure = addElement(book, 'figure');
+    let figure = addElement(book, 'figure', 'books__book');
 
     addElement(figure, 'img', 'books__book-img', null, id,
         new Map([
@@ -103,23 +113,26 @@ const renderBook = function (container, id, item) {
     addElement(figcaption, 'p', 'books__book-price', item.price + "$");
     let buttons = addElement(figcaption, 'div', 'books__book-buttons');
 
-    let showLink = addElement(buttons, 'a', 'books__book-info-link', 'Show more', null,
+    addElement(buttons, 'a', 'books__book-info-link', 'Show more', null,
         new Map([
             ['href', '#book-descr'],
             ['title', 'Show book description']
         ]));
 
-    showLink.addEventListener('click', (event) => {
+    figure.addEventListener('click', (event) => {
+        if (event.target.classList.contains('book-add-to-cart')) {
+            return;
+        }
         let popupContainer = document.querySelector('.popup');
-        renderDescPopup(popupContainer, item.title, item.author, item.description);
+        renderDescPopup(popupContainer, item);
     })
 
-    let addBtn = addElement(buttons, 'button', null, 'Add to bag', null,
+    let addBtn = addElement(buttons, 'button', 'book-add-to-cart', 'Add to bag', null,
         new Map([
             ['title', 'Add to bag']
         ]));
 
-    addBtn.addEventListener('click', (event) => {
+    addBtn.addEventListener('click', () => {
         addToCart({ ...item, id });
     });
 
